@@ -1,13 +1,19 @@
 # ICW_Repository_w2052149
 
 Description:
-This repository contains the full lifecycle of a data science project developed for the 5DATA004W module. The project explores historical exchange rate trends of the Sri Lankan Rupee (LKR) using a cleaned dataset from 1970 to 2022. 
+This repository contains the full lifecycle of a data science project developed for the 5DATA004W – Data Science Project Lifecycle module. The project explores historical exchange rate trends of the Sri Lankan Rupee (LKR) from 1970 to 2022, using publicly available data from Humanitarian Data Exchange (HDX). The final product is an interactive dashboard built using Streamlit to support government policy analysis and decision-making.
 
 It includes:
 
+_**1. Dataset Files**_
+
 **exchange_rates.csv**
 
-The original dataset obtained from HDX, containing the exchange rate data of the Sri Lankan Rupee (LKR) from 1970 to 2022. 
+- The original dataset obtained from HDX.
+
+- Contains raw exchange rate data of the Sri Lankan Rupee (LKR) to USD from 1970 to 2022.
+
+- Includes multiple unused metadata columns.
 
 **cleaned_exchange_rates.csv**
 
