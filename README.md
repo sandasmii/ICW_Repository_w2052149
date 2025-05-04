@@ -1,46 +1,48 @@
 # ICW_Repository_w2052149
 
-Description:
+## **Description**
 This repository contains the full lifecycle of a data science project developed for the 5DATA004W – Data Science Project Lifecycle module. The project explores historical exchange rate trends of the Sri Lankan Rupee (LKR) from 1970 to 2022, using publicly available data from Humanitarian Data Exchange (HDX). The final product is an interactive dashboard built using Streamlit to support government policy analysis and decision-making.
 
-It includes:
+## **Contents**
 
-_**1. Dataset Files**_
+### 1. Dataset Files
 
-**exchange_rates.csv**
+#### **exchange-rates_lka.csv**
+- The original raw dataset downloaded from HDX.
+- Contains monthly exchange rates of the Sri Lankan Rupee (LKR) to USD from 1970 to 2022, along with additional metadata columns (e.g., ISO codes, flags, units).
 
-- The original dataset obtained from HDX.
+#### **cleaned_exchange_rates.csv**
+- The intermediate cleaned dataset, used for exploration and feature engineering.
+- Applied preprocessing steps:
+  - Removed unnecessary metadata columns
+  - Renamed columns (e.g., StartDate → Date, Value → Exchange_Rate)
+  - Removed duplicates and missing values
+  - Converted date formats and extracted Year and Month
+  - Sorted chronologically
 
-- Contains raw exchange rate data of the Sri Lankan Rupee (LKR) to USD from 1970 to 2022.
+#### **final_exchange_rates.csv**
+- The final dataset used for dashboard visualizations. Includes:
+  - Exchange_Rate_Winsorized – Outlier-handled exchange rates using winsorization
+  - Exchange_Rate_Change – Daily percentage change
+  - Rolling_Mean & Rolling_Std – 30-day rolling statistics for trend analysis
 
-- Includes multiple unused metadata columns.
+### 2. Application Code
 
-**cleaned_exchange_rates.csv**
+#### **streamlit_app.py**
+- The main Streamlit script for the dashboard.
+- Implements multiple visualizations: trend lines, YoY change, rolling averages, correlation plots, and a focus on the 2022 crisis.
+- Includes interactivity via year filtering, metric selection, and view toggling.
 
-This file contains the cleaned version of the original HDX exchange rate dataset. The following preprocessing steps were applied:
+#### **dspl_icw_cleaning_w2052149.ipynb**
+- Jupyter notebook used for data cleaning, EDA, and feature engineering.
 
-- Dropped irrelevant columns (Flag, Currency, ISO Code, etc.)
+### 3. Other Files
+#### **requirements.txt**
+- Lists all Python package dependencies for local deployment.
 
-- Removed duplicate rows and missing values
-
-- Renamed and formatted columns (Date, Exchange_Rate)
-
-- Extracted Year and Month for filtering
-
-- Sorted the data chronologically
-
-_This file was primarily used for exploration, EDA, and feature engineering._
-
-**final_exchange_rates.csv**
-
-This is the final version of the dataset used in the Streamlit dashboard. It includes:
-
-- Exchange_Rate_Winsorized: Outlier-handled exchange rate
-
-- Exchange_Rate_Change: Daily % change
-
-- Rolling_Mean and Rolling_Std: 30-day rolling statistics
-
-_This dataset is loaded by streamlit_app.py and powers the visualizations in the dashboard._
-
+#### **.devcontainer/**
+- Contains configuration for GitHub Codespaces.
+  
+#### **README.md**
+- This documentation file.
 
