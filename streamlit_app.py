@@ -32,12 +32,15 @@ df = load_data()
 st.subheader("Exchange Rate Trend Over Time")
 fig1, ax1 = plt.subplots(figsize=(12, 6))
 ax1.plot(df['Date'], df['Exchange_Rate'], color='skyblue', label='Exchange Rate')
+# Highlight the 2022 economic crisis in red
+ax1.axvline(pd.to_datetime('2022-01-01'), color='red', linestyle='--', label='2022 Crisis')
 ax1.set_xlabel("Date")
 ax1.set_ylabel("Exchange Rate (LKR to USD)")
 ax1.set_title("Exchange Rate Over Time")
 ax1.grid(True)
 ax1.legend()
 st.pyplot(fig1)
+
 
 # Visualization 2: Year-on-Year Change
 st.subheader("Year-on-Year Change")
