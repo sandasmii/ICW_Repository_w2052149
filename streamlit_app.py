@@ -12,14 +12,29 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
 
-# Set page layout
+#Set page layout
 st.set_page_config(page_title="Sri Lankan Exchange Rate Dashboard", layout="wide")
 
-# Title
+#Title
 st.title("Sri Lankan Exchange Rate Analysis Dashboard")
 st.caption("Dataset: HDX | Years: 1970 - 2022")
 
-# Load the final, prepared dataset
+st.markdown('This dashboard visualizes the exchange rates of the Sri Lankan Rupee (LKR) over time.')
+
+#Sidebar for year range selection
+st.sidebar.header('Filter by Year')
+min_year = int(df['Date'].dt.year.min())
+max_year = int(df['Date'].dt.year.max())
+year_range = st.sidebar.slider('Select Year Range', min_year, max_year, (min_year, max_year))
+
+#Create a Year column for filtering
+df['Year'] = df['Date'].dt.year
+filtered_df = df[(df['Year'] >= year_range[0]) & (df['Year'] <= year_range[1])]
+
+#Sidebar for monthly vs annual toggle
+view_option = st.sidebar.radio('View by', ('Monthly', 'Annual'))
+
+#Load the final, prepared dataset
 @st.cache_data
 def load_data():
     df = pd.read_csv('final_exchange_rates.csv')
@@ -28,12 +43,18 @@ def load_data():
 
 df = load_data()
 
-# Visualization 1: Exchange Rate Trend
+#Plotting the data
+st.header('Exchange Rate Trends')
+if view_option == 'Monthly':
+    st.line_chart(filtered_df.set_index('Date')['Exchange_Rate'])
+else:
+    annual_df = filtered_df.groupby('Year').mean(numeric_only=True).reset_index()
+    st.line_chart(annual_df.set_index('Year')['Exchange_Rate'])
+
+#Visualization 1: Exchange Rate Trend
 st.subheader("Exchange Rate Trend Over Time")
 fig1, ax1 = plt.subplots(figsize=(12, 6))
 ax1.plot(df['Date'], df['Exchange_Rate'], color='skyblue', label='Exchange Rate')
-# Highlight the 2022 economic crisis in red
-ax1.axvline(pd.to_datetime('2022-01-01'), color='red', linestyle='--', label='2022 Crisis')
 ax1.set_xlabel("Date")
 ax1.set_ylabel("Exchange Rate (LKR to USD)")
 ax1.set_title("Exchange Rate Over Time")
@@ -41,8 +62,7 @@ ax1.grid(True)
 ax1.legend()
 st.pyplot(fig1)
 
-
-# Visualization 2: Year-on-Year Change
+#Visualization 2: Year-on-Year Change
 st.subheader("Year-on-Year Change")
 fig2, ax2 = plt.subplots(figsize=(10, 6))
 ax2.plot(df['Date'], df['YoY_Change'], color='orange', label='YoY Change (%)')
@@ -64,7 +84,20 @@ ax3.grid(True)
 ax3.legend()
 st.pyplot(fig3)
 
-# Visualization 4: Correlation Interactive Scatter
+# Highlighting the 2022 economic crisis
+st.header('2022 Economic Crisis Highlight')
+crisis_2022 = df[df['Year'] == 2022]
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.plot(df['Date'], df['Exchange_Rate'], label='Exchange Rate')
+ax.axvline(pd.Timestamp('2022-01-01'), color='r', linestyle='--', label='2022 Crisis Start')
+ax.axvline(pd.Timestamp('2022-12-31'), color='r', linestyle='--', label='2022 Crisis End')
+ax.legend()
+ax.set_title('Sri Lankan Exchange Rates with 2022 Crisis Highlight')
+ax.set_xlabel('Date')
+ax.set_ylabel('Exchange Rate')
+st.pyplot(fig)
+
+#Visualization 4: Correlation Interactive Scatter
 st.subheader("Correlation Analysis")
 x_axis = st.selectbox("X-axis", ['Exchange_Rate', 'YoY_Change', 'Rolling_Avg'])
 y_axis = st.selectbox("Y-axis", ['Exchange_Rate', 'YoY_Change', 'Rolling_Avg'])
@@ -75,7 +108,7 @@ ax4.set_ylabel(y_axis)
 ax4.set_title(f"Correlation between {x_axis} and {y_axis}")
 st.pyplot(fig4)
 
-# Info Section
+#Info Section
 st.subheader("Potential External Factors")
 st.markdown("""
 Exchange rate fluctuations can be influenced by multiple factors such as:
