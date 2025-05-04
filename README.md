@@ -5,20 +5,36 @@ This repository contains the full lifecycle of a data science project developed 
 
 It includes:
 
-📁 Data preparation notebooks for cleaning and preprocessing
+**exchange_rates.csv**
 
-🧪 Test cases and logs for validating dashboard functionality
+The original dataset obtained from HDX, containing the exchange rate data of the Sri Lankan Rupee (LKR) from 1970 to 2022. 
 
-🌐 A Streamlit dashboard for interactive visualization
+**cleaned_exchange_rates.csv**
 
-Key Features:
+This file contains the cleaned version of the original HDX exchange rate dataset. The following preprocessing steps were applied:
 
-Interactive line chart of exchange rates over time
+- Dropped irrelevant columns (Flag, Currency, ISO Code, etc.)
 
-Toggle between monthly and annual views
+- Removed duplicate rows and missing values
 
-Year range slider for filtering
+- Renamed and formatted columns (Date, Exchange_Rate)
 
-Highlight of the 2022 economic crisis
+- Extracted Year and Month for filtering
 
-Clean and modular code structure
+- Sorted the data chronologically
+
+_This file was primarily used for exploration, EDA, and feature engineering._
+
+**final_exchange_rates.csv**
+
+This is the final version of the dataset used in the Streamlit dashboard. It includes:
+
+- Exchange_Rate_Winsorized: Outlier-handled exchange rate
+
+- Exchange_Rate_Change: Daily % change
+
+- Rolling_Mean and Rolling_Std: 30-day rolling statistics
+
+_This dataset is loaded by streamlit_app.py and powers the visualizations in the dashboard._
+
+
