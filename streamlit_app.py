@@ -96,27 +96,25 @@ ax4.grid(True)
 st.pyplot(fig4)
 
 # Visualization 5: Correlation Interactive Scatter
-st.subheader("Correlation Analysis")
-x_axis = st.selectbox("X-axis", ['Exchange_Rate', 'YoY_Change', 'Rolling_Avg'])
-y_axis = st.selectbox("Y-axis", ['Exchange_Rate', 'YoY_Change', 'Rolling_Avg'])
-correlation = df[[x_axis, y_axis]].corr(method='pearson').iloc[0,1]
+st.subheader("Correlation Analysis: Rolling Average vs Year-on-Year Change")
 fig5, ax5 = plt.subplots(figsize=(8, 6))
-ax5.scatter(df[x_axis], df[y_axis], color='purple', alpha=0.5)
-ax5.set_xlabel(x_axis)
-ax5.set_ylabel(y_axis)
-ax5.set_title(f"Scatter Plot: {x_axis} vs {y_axis}")
-ax5.grid(True)
+ax5.scatter(df['Rolling_Avg'], df['YoY_Change'], color='darkcyan', alpha=0.6)
+ax5.set_xlabel("12-Month Rolling Average")
+ax5.set_ylabel("Year-on-Year Change (%)")
+ax5.set_title("Scatter Plot: Rolling Average vs YoY Change")
+# Calculate and show correlation
+correlation = df[['Rolling_Avg', 'YoY_Change']].corr(method='pearson').iloc[0, 1]
 st.pyplot(fig5)
-
-# Show correlation value and interpretation
-st.markdown(f"**Pearson Correlation Coefficient between {x_axis} and {y_axis}: {correlation:.2f}**")
+st.markdown(f"**Pearson Correlation Coefficient: {correlation:.2f}**")
+# Interpretation
 if abs(correlation) < 0.3:
     strength = "weak or no correlation"
 elif abs(correlation) < 0.7:
     strength = "moderate correlation"
 else:
     strength = "strong correlation"
-st.markdown(f"_This indicates a **{strength}** between {x_axis} and {y_axis}_")
+direction = "positive" if correlation > 0 else "negative"
+st.markdown(f"_There is a **{strength} {direction} correlation** between the 12-month average and YoY changes. This means that short-term shifts do{' not' if strength == 'weak or no correlation' else ''} align strongly with longer-term trends._")
 
 # Info Section
 st.subheader("Potential External Factors")
