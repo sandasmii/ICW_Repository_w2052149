@@ -99,14 +99,19 @@ st.pyplot(fig)
 
 #Visualization 5: Correlation Interactive Scatter
 st.subheader("Correlation Analysis")
-x_axis = st.selectbox("X-axis", ['Exchange_Rate', 'YoY_Change', 'Rolling_Avg'])
-y_axis = st.selectbox("Y-axis", ['Exchange_Rate', 'YoY_Change', 'Rolling_Avg'])
-fig4, ax4 = plt.subplots(figsize=(8, 6))
-ax4.scatter(df[x_axis], df[y_axis], color='purple', alpha=0.5)
-ax4.set_xlabel(x_axis)
-ax4.set_ylabel(y_axis)
-ax4.set_title(f"Correlation between {x_axis} and {y_axis}")
-st.pyplot(fig4)
+options = ['Exchange_Rate', 'YoY_Change', 'Rolling_Avg']
+x_axis = st.selectbox("X-axis", options, key='x_axis')
+y_options = [opt for opt in options if opt != x_axis]
+y_axis = st.selectbox("Y-axis", y_options, key='y_axis')
+correlation = df[[x_axis, y_axis]].corr().iloc[0, 1]
+st.markdown(f"**Pearson correlation coefficient between `{x_axis}` and `{y_axis}`:** `{correlation:.2f}`")
+fig = plt.figure(figsize=(8, 6))
+plt.scatter(df[x_axis], df[y_axis], alpha=0.5, color='purple')
+plt.xlabel(x_axis)
+plt.ylabel(y_axis)
+plt.title(f"{x_axis} vs {y_axis}")
+st.pyplot(fig)
+
 
 #Info Section
 st.subheader("Potential External Factors")
