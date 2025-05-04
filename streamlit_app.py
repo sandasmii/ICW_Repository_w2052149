@@ -12,38 +12,39 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
 
-#Set page layout
+# Set page layout
 st.set_page_config(page_title="Sri Lankan Exchange Rate Dashboard", layout="wide")
 
-#Load the final, prepared dataset
+# Load the final, prepared dataset
 @st.cache_data
 def load_data():
     df = pd.read_csv('final_exchange_rates.csv')
     df['Date'] = pd.to_datetime(df['Date'])
+    df['Year'] = df['Date'].dt.year
+    df['Month'] = df['Date'].dt.month
     return df
 
 df = load_data()
 
-#Title
+# Title
 st.title("Sri Lankan Exchange Rate Analysis Dashboard")
 st.caption("Dataset: HDX | Years: 1970 - 2022")
 
 st.markdown('This dashboard visualizes the exchange rates of the Sri Lankan Rupee (LKR) over time.')
 
-#Sidebar for year range selection
+# Sidebar for year range selection
 st.sidebar.header('Filter by Year')
-min_year = int(df['Date'].dt.year.min())
-max_year = int(df['Date'].dt.year.max())
+min_year = int(df['Year'].min())
+max_year = int(df['Year'].max())
 year_range = st.sidebar.slider('Select Year Range', min_year, max_year, (min_year, max_year))
 
-#Create a Year column for filtering
-df['Year'] = df['Date'].dt.year
-filtered_df = df[(df['Year'] >= year_range[0]) & (df['Year'] <= year_range[1])]
-
-#Sidebar for monthly vs annual toggle
+# Sidebar for monthly vs annual toggle
 view_option = st.sidebar.radio('View by', ('Monthly', 'Annual'))
 
-#Plotting the data
+# Filtered data
+filtered_df = df[(df['Year'] >= year_range[0]) & (df['Year'] <= year_range[1])]
+
+# Plotting Exchange Rate Trends
 st.header('Exchange Rate Trends')
 if view_option == 'Monthly':
     st.line_chart(filtered_df.set_index('Date')['Exchange_Rate'])
@@ -51,66 +52,64 @@ else:
     annual_df = filtered_df.groupby('Year').mean(numeric_only=True).reset_index()
     st.line_chart(annual_df.set_index('Year')['Exchange_Rate'])
 
-#Visualization 1: Exchange Rate Trend
+# Visualization 1: Exchange Rate Trend
 st.subheader("Exchange Rate Trend Over Time")
-fig1, ax1 = plt.subplots(figsize=(12, 6))
-ax1.plot(df['Date'], df['Exchange_Rate'], color='skyblue', label='Exchange Rate')
-ax1.set_xlabel("Date")
-ax1.set_ylabel("Exchange Rate (LKR to USD)")
-ax1.set_title("Exchange Rate Over Time")
-ax1.grid(True)
-ax1.legend()
-st.pyplot(fig1)
+fig1 = px.line(
+    df, x='Date', y='Exchange_Rate',
+    labels={'Exchange_Rate': 'Exchange Rate (LKR to USD)'},
+    title='Exchange Rate Over Time',
+    markers=True
+)
+st.plotly_chart(fig1, use_container_width=True)
 
-#Visualization 2: Year-on-Year Change
+# Visualization 2: Year-on-Year Change
 st.subheader("Year-on-Year Change")
-fig2, ax2 = plt.subplots(figsize=(10, 6))
-ax2.plot(df['Date'], df['YoY_Change'], color='orange', label='YoY Change (%)')
-ax2.set_xlabel("Date")
-ax2.set_ylabel("YoY Change (%)")
-ax2.set_title("Year-on-Year Change in Exchange Rate")
-ax2.grid(True)
-ax2.legend()
-st.pyplot(fig2)
+fig2 = px.line(
+    df, x='Date', y='YoY_Change',
+    labels={'YoY_Change': 'Year-on-Year Change (%)'},
+    title='Year-on-Year Change in Exchange Rate',
+    markers=True
+)
+st.plotly_chart(fig2, use_container_width=True)
 
 # Visualization 3: Rolling Average
 st.subheader("12-Month Rolling Average")
-fig3, ax3 = plt.subplots(figsize=(10, 6))
-ax3.plot(df['Date'], df['Rolling_Avg'], color='green', label='12-Month Rolling Average')
-ax3.set_xlabel("Date")
-ax3.set_ylabel("Exchange Rate (LKR to USD)")
-ax3.set_title("12-Month Rolling Average of Exchange Rate")
-ax3.grid(True)
-ax3.legend()
-st.pyplot(fig3)
+fig3 = px.line(
+    df, x='Date', y='Rolling_Avg',
+    labels={'Rolling_Avg': '12-Month Rolling Average'},
+    title='12-Month Rolling Average of Exchange Rate',
+    markers=True
+)
+st.plotly_chart(fig3, use_container_width=True)
 
-#Visualization 4: The 2022 Economic Crisis
+# Visualization 4: The 2022 Economic Crisis
 st.header('2022 Economic Crisis Highlight')
-crisis_2022 = df[df['Year'] == 2022]
-fig, ax = plt.subplots(figsize=(10, 5))
-ax.plot(df['Date'], df['Exchange_Rate'], label='Exchange Rate')
-ax.axvline(pd.Timestamp('2022-01-01'), color='r', linestyle='--', label='2022 Crisis Start')
-ax.axvline(pd.Timestamp('2022-12-31'), color='r', linestyle='--', label='2022 Crisis End')
-ax.legend()
-ax.set_title('Sri Lankan Exchange Rates with 2022 Crisis Highlight')
-ax.set_xlabel('Date')
-ax.set_ylabel('Exchange Rate')
-st.pyplot(fig)
+fig4, ax4 = plt.subplots(figsize=(10, 5))
+ax4.plot(df['Date'], df['Exchange_Rate'], label='Exchange Rate')
+ax4.axvline(pd.Timestamp('2022-01-01'), color='r', linestyle='--', label='2022 Crisis Start')
+ax4.axvline(pd.Timestamp('2022-12-31'), color='r', linestyle='--', label='2022 Crisis End')
+ax4.legend()
+ax4.set_title('Sri Lankan Exchange Rates with 2022 Crisis Highlight')
+ax4.set_xlabel('Date')
+ax4.set_ylabel('Exchange Rate')
+ax4.grid(True)
+st.pyplot(fig4)
 
-#Visualization 5: Correlation Interactive Scatter
+# Visualization 5: Correlation Interactive Scatter
 st.subheader("Correlation Analysis")
 x_axis = st.selectbox("X-axis", ['Exchange_Rate', 'YoY_Change', 'Rolling_Avg'])
 y_axis = st.selectbox("Y-axis", ['Exchange_Rate', 'YoY_Change', 'Rolling_Avg'])
 correlation = df[[x_axis, y_axis]].corr(method='pearson').iloc[0,1]
-fig, ax = plt.subplots(figsize=(8, 6))
-ax.scatter(df[x_axis], df[y_axis], color='purple', alpha=0.5)
-ax.set_xlabel(x_axis)
-ax.set_ylabel(y_axis)
-ax.set_title(f"Scatter Plot: {x_axis} vs {y_axis}")
-st.pyplot(fig)
+fig5, ax5 = plt.subplots(figsize=(8, 6))
+ax5.scatter(df[x_axis], df[y_axis], color='purple', alpha=0.5)
+ax5.set_xlabel(x_axis)
+ax5.set_ylabel(y_axis)
+ax5.set_title(f"Scatter Plot: {x_axis} vs {y_axis}")
+ax5.grid(True)
+st.pyplot(fig5)
+
 # Show correlation value and interpretation
 st.markdown(f"**Pearson Correlation Coefficient between {x_axis} and {y_axis}: {correlation:.2f}**")
-
 if abs(correlation) < 0.3:
     strength = "weak or no correlation"
 elif abs(correlation) < 0.7:
@@ -119,7 +118,7 @@ else:
     strength = "strong correlation"
 st.markdown(f"_This indicates a **{strength}** between {x_axis} and {y_axis}_")
 
-#Info Section
+# Info Section
 st.subheader("Potential External Factors")
 st.markdown("""
 Exchange rate fluctuations can be influenced by multiple factors such as:
@@ -128,16 +127,16 @@ Exchange rate fluctuations can be influenced by multiple factors such as:
 - Trade balance
 - Interest rate policies
 - Political events or instability
+
 Future iterations could integrate these data sources for deeper analysis.
 """)
 
-#Feature Engineering display
-df['Date'] = pd.to_datetime(df['Date'])
+# Feature Engineering Display
 df['Year_Month'] = df['Date'].dt.strftime('%Y-%m')
-df['Year'] = df['Date'].dt.year
 bins = [0, 50, 100, 150, 200, 300, 400]
 labels = ['0-50', '50-100', '100-150', '150-200', '200-300', '300-400']
 df['Exchange_Rate_Bin'] = pd.cut(df['Exchange_Rate'], bins=bins, labels=labels, right=False)
 
+# Dataset preview
 st.subheader("Preview of Dataset")
-st.dataframe(df.head())
+st.dataframe(df.head(50))
