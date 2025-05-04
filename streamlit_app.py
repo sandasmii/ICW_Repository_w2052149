@@ -15,6 +15,15 @@ import plotly.express as px
 #Set page layout
 st.set_page_config(page_title="Sri Lankan Exchange Rate Dashboard", layout="wide")
 
+#Load the final, prepared dataset
+@st.cache_data
+def load_data():
+    df = pd.read_csv('final_exchange_rates.csv')
+    df['Date'] = pd.to_datetime(df['Date'])
+    return df
+
+df = load_data()
+
 #Title
 st.title("Sri Lankan Exchange Rate Analysis Dashboard")
 st.caption("Dataset: HDX | Years: 1970 - 2022")
@@ -33,15 +42,6 @@ filtered_df = df[(df['Year'] >= year_range[0]) & (df['Year'] <= year_range[1])]
 
 #Sidebar for monthly vs annual toggle
 view_option = st.sidebar.radio('View by', ('Monthly', 'Annual'))
-
-#Load the final, prepared dataset
-@st.cache_data
-def load_data():
-    df = pd.read_csv('final_exchange_rates.csv')
-    df['Date'] = pd.to_datetime(df['Date'])
-    return df
-
-df = load_data()
 
 #Plotting the data
 st.header('Exchange Rate Trends')
@@ -84,7 +84,7 @@ ax3.grid(True)
 ax3.legend()
 st.pyplot(fig3)
 
-# Highlighting the 2022 economic crisis
+#Visualization 4: The 2022 Economic Crisis
 st.header('2022 Economic Crisis Highlight')
 crisis_2022 = df[df['Year'] == 2022]
 fig, ax = plt.subplots(figsize=(10, 5))
@@ -97,7 +97,7 @@ ax.set_xlabel('Date')
 ax.set_ylabel('Exchange Rate')
 st.pyplot(fig)
 
-#Visualization 4: Correlation Interactive Scatter
+#Visualization 5: Correlation Interactive Scatter
 st.subheader("Correlation Analysis")
 x_axis = st.selectbox("X-axis", ['Exchange_Rate', 'YoY_Change', 'Rolling_Avg'])
 y_axis = st.selectbox("Y-axis", ['Exchange_Rate', 'YoY_Change', 'Rolling_Avg'])
