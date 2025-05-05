@@ -120,14 +120,49 @@ st.markdown(f"_There is a **{strength} {direction} correlation** between the 12-
 st.subheader("Potential External Factors")
 st.markdown("""
 Exchange rate fluctuations can be influenced by multiple factors such as:
-- Global oil prices
 - Inflation differentials
-- Trade balance
 - Interest rate policies
-- Political events or instability
+- Recession
+- Speculation
+- Stock markets
+- Political instability
+- Government debt
+- Trade balance
+- Current account deficits (Larson, 2024)
 
-Future iterations could integrate these data sources for deeper analysis.
+Future iterations could integrate these data sources for deeper analysis.  
 """)
+
+st.subheader("Key Economic Challenges Faced in 2022")
+st.markdown("""
+Sri Lanka faced a severe economic collapse in 2022, driven by a combination of poor policy decisions, external shocks, and mounting debt. Key events include:
+
+- **2009**: Post-civil war focus on local production led to increased dependency on imports.
+- **2019**: Major tax cuts reduced government revenue drastically.
+- **2020**: COVID-19 devastated the tourism sector (previously ~5% of GDP).
+- **2021**: A sudden ban on chemical fertilizers triggered agricultural failure, increasing import reliance.
+- **April–May 2022**: Nationwide protests forced a change in government leadership.
+- **June 2022**: Food inflation exceeded 57%. Citizens were urged to grow food due to severe shortages.
+
+By mid-2022:
+- Foreign currency reserves fell from $7.6B (2019) to just $50M.
+- Imports were unsustainable; Sri Lanka defaulted on international loans.
+- Consumer inflation hit **39%**, severely affecting 22 million citizens.
+- Top import needs included fuel, food, textiles, and chemicals. (Koop, 2022)
+
+This crisis reflects how debt, global shocks (like COVID-19 and the Ukraine war), and policy missteps can devastate low-income economies.
+""")
+
+#References
+st.subheader("References")
+st.markdown("""
+- Koop, A. (2022). *Sri Lanka’s political and economic situation, visualized*. World Economic Forum.  
+  [https://www.weforum.org/stories/2022/07/economic-politics-debt-protest-crisis-sri-lanka](https://www.weforum.org/stories/2022/07/economic-politics-debt-protest-crisis-sri-lanka)
+
+- Larson, E. (2024). *Why do exchange rates fluctuate?* | Western Union.  
+  [https://www.westernunion.com/blog/en/us/what-causes-exchange-rates-to-change/?cust_src=organic_search](https://www.westernunion.com/blog/en/us/what-causes-exchange-rates-to-change/?cust_src=organic_search)
+""")
+
 
 # Feature Engineering Display
 df['Year_Month'] = df['Date'].dt.strftime('%Y-%m')
