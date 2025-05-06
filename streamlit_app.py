@@ -145,7 +145,7 @@ Sri Lanka faced a severe economic collapse in 2022, driven by a combination of p
 - **June 2022**: Food inflation exceeded 57%. Citizens were urged to grow food due to severe shortages.
 
 By mid-2022:
-- Foreign currency reserves fell from $7.6B (2019) to just $50M.
+- Foreign currency reserves fell from $7.6B to just 50M.
 - Imports were unsustainable; Sri Lanka defaulted on international loans.
 - Consumer inflation hit **39%**, severely affecting 22 million citizens.
 - Top import needs included fuel, food, textiles, and chemicals. (Koop, 2022)
