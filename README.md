@@ -31,7 +31,7 @@ The goal is to present key insights into Sri Lanka’s monetary trends and econo
 ## Live Dashboard Deployment
 
 The Streamlit app has been deployed on **Streamlit Community Cloud** and is accessible here:  
-🔗 [Open Dashboard](https://share.streamlit.io/) *(replace with your actual app link once deployed)*
+https://icwrepositoryw2052149-mncqneravpr8mz8rnlphgg.streamlit.app/
 
 ---
 
